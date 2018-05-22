@@ -3,8 +3,8 @@
 path+=("/usr/local/Cellar/phplint/3.0-20160307/bin")
 path+=("./vendor/bin")
 export PATH
-if [ -f ~/.aliases ]; then
-	source ~/.aliases
+if [ -f ~/.oh-my-zsh/custom/aliases ]; then
+	source ~/.oh-my-zsh/custom/aliases
 else
-	print "404: ~/.aliases not found."
+	print "404: ~/.oh-my-zsh/custom/aliases not found."
 fi
