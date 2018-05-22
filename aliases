@@ -1,0 +1,40 @@
+alias homestead='function __homestead() { (cd ~/Homestead && vagrant $*); unset -f __homestead; }; __homestead'
+alias art='php artisan'
+#Alias edit hosts
+alias vhosts="vi /Applications/XAMPP/etc/extra/httpd-vhosts.conf"
+alias hosts="sudo vim /etc/hosts"
+#Commands
+
+#Make
+alias mauth='php artisan make:auth'
+alias mcons='php artisan make:console'
+alias mev='php artisan make:event'
+alias mjob='php artisan make:job'
+alias mlis='php artisan make:listener'
+alias mmid='php artisan make:middleware'
+alias mmig='php artisan make:migration'
+alias mmisc='php artisan make:migration:schema'
+alias mmod='php artisan make:model'
+alias mpol='php artisan make:policy'
+alias mpro='php artisan make:provider'
+alias mreq='php artisan make:request'
+alias mseed='php artisan make:seed'
+alias mseeder'php artisan make:seeder'
+alias mtest='php artisan make:test'
+
+
+#Migrate
+alias mig='php artisan migrate'
+alias migi='php artisan migrate:install'
+alias migr='php artisan migrate:refresh'
+alias migre='php artisan migrate:reset'
+alias migrb='php artisan migrate:rollback'
+alias migs='php artisan migrate:status'
+alias gl='git log --graph --pretty=format:%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) %C(cyan)<%an>%Creset --abbrev-commit'
+
+gacp(){
+gaa
+gc -m "$1"
+gp
+}
+
