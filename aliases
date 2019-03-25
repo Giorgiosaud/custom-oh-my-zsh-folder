@@ -31,10 +31,28 @@ alias migre='php artisan migrate:reset'
 alias migrb='php artisan migrate:rollback'
 alias migs='php artisan migrate:status'
 alias gl='git log --graph --pretty=format:%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) %C(cyan)<%an>%Creset --abbrev-commit'
-
+#git
+alias dev='git checkout develop'
+alias prod='git checkout master'
+alias pull='git pull'
+alias devpull='git checkout develop && git pull'
+alias prodpull='git checkout master && git pull'
+#add new branch
 gacp(){
 gaa
 gc -m "$1"
 gp
 }
 
+#@modyo/cli
+alias mypc='modyo-cli project create'
+alias mys='modyo-cli project start'
+alias myl='modyo-cli login'
+alias myo='modyo-cli project logout'
+alias mywc='modyo-cli widget add'
+alias myws='modyo-cli widget start'
+alias mywd='modyo-cli widget delete'
+alias mywp='modyo-cli widget push'
+#GITHUB 
+alias gl="git log --graph --pretty=format:'%C(yellow)%d%Creset %C(cyan)%h%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=short --all"
+alias reload="source ~/.zshrc"
