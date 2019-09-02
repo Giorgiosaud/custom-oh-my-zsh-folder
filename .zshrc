@@ -81,6 +81,7 @@ git
 paths
 zsh-autosuggestions
 locale
+zsh-bd
 )
 
 source $ZSH/oh-my-zsh.sh
