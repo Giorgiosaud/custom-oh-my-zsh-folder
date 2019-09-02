@@ -4,6 +4,9 @@ if [ -f ~/.composer/vendor/bin ]; then
 export PATH=$PATH:~/.composer/vendor/bin
 fi
 
+if [ -f ./node_modules/.bin ]; then
+export PATH=$PATH:./node_modules/.bin
+fi
 if [ -f ./vendor/bin ]; then
 export PATH=$PATH:./vendor/bin
 fi
@@ -13,4 +16,4 @@ else
 	print "404: ~/.oh-my-zsh/custom/aliases not found."
 fi
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-PATH=$PATH:$ANDROID_HOME/tools; PATH=$PATH:$ANDROID_HOME/platform-tools
+PATH=$PATH:$ANDROID_HOME/tools; PATH=$PATH:$ANDROID_HOME/platform-tools; PATH=$PATH:~/.composer/vendor/bin

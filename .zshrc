@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/jorgesaud/.oh-my-zsh
+export ZSH=/Users/Jorge/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -11,19 +11,19 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 
 # Customise the Powerlevel9k prompts
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-  dir
-  vcs
-  custom_tools
-)
+		dir
+		vcs
+		custom_tools
+		)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
 #POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
-POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
-POWERLEVEL9K_CUSTOM_TOOLS_BACKGROUND="lightsalmon3"
+	POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
+	POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
+	POWERLEVEL9K_CUSTOM_TOOLS_BACKGROUND="lightsalmon3"
 
 # Load Nerd Fonts with Powerlevel9k theme for Zsh
-POWERLEVEL9K_MODE='nerdfont-complete'
-source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
+	POWERLEVEL9K_MODE='nerdfont-complete'
+	source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
 
 
 
@@ -77,10 +77,10 @@ source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git
-  paths
-  zsh-autosuggestions
-
+git
+paths
+zsh-autosuggestions
+locale
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -117,28 +117,12 @@ source $ZSH/oh-my-zsh.sh
 
 ###-tns-completion-start-###
 if [ -f /Users/jorgesaud/.tnsrc ]; then
-    source /Users/jorgesaud/.tnsrc
+source /Users/jorgesaud/.tnsrc
 fi
 ###-tns-completion-end-###
-# Defer initialization of nvm until nvm, node or a node-dependent command is
-# run. Ensure this block is only run once if .bashrc gets sourced multiple times
-# by checking whether __init_nvm is a function.
-#export NVM_DIR=~/.nvm
-#. $(brew --prefix nvm)/nvm.sh
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-if [ -s "$HOME/.nvm/nvm.sh" ]; then
-  export NVM_DIR=~/.nvm
-  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-  declare -a __node_commands=('nvm' 'node' 'npm' 'yarn' 'gulp' 'grunt' 'webpack' 'modyo-cli')
-  function __init_nvm() {
-    for i in "${__node_commands[@]}"; do unalias $i; done
-    . $(brew --prefix nvm)/nvm.sh
-    nvm use v8.12.0
-    unset __node_commands
-    unset -f __init_nvm
-  }
-  for i in "${__node_commands[@]}"; do alias $i='__init_nvm && '$i; done
-fi
-export PATH="/usr/local/sbin:$PATH"
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
