@@ -7,20 +7,21 @@ export ZSH=/Users/Jorge/.oh-my-zsh
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel9k/powerlevel9k"
 
-# Customise the Powerlevel9k prompts
+# Customise the Powerlevel9k prompts POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(battery)
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-		dir
-		vcs
-		custom_tools
-        vi_mode
-		)
+    dir
+	vcs
+	custom_tools
+    vi_mode
+)
 # `vcs` color customization
 POWERLEVEL9K_VCS_CLEAN_FOREGROUND='blue'
 POWERLEVEL9K_VCS_CLEAN_BACKGROUND='green'
 POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='yellow'
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='black'
 POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='red'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='teal'
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='gold'
 #POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 	POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
 	POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
