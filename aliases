@@ -45,14 +45,11 @@ gp
 }
 
 #@modyo/cli
-alias mypc='modyo-cli project create'
-alias mys='modyo-cli project start'
+alias myc='modyo-cli create'
+alias mys='modyo-cli start'
 alias myl='modyo-cli login'
-alias myo='modyo-cli project logout'
-alias mywc='modyo-cli widget add'
-alias myws='modyo-cli widget start'
-alias mywd='modyo-cli widget delete'
-alias mywp='modyo-cli widget push'
-#GITHUB 
+alias myo='modyo-cli logout'
+alias myp='modyo-cli push'
+#GITHUB
 alias gl="git log --graph --pretty=format:'%C(yellow)%d%Creset %C(cyan)%h%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=short --all"
 alias reload="source ~/.zshrc"

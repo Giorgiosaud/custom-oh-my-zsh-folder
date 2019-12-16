@@ -1,6 +1,4 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
+# If you come from bash you might have to change your $PATH.  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/Jorge/.oh-my-zsh
 
@@ -14,8 +12,15 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
 		dir
 		vcs
 		custom_tools
+        vi_mode
 		)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
+# `vcs` color customization
+POWERLEVEL9K_VCS_CLEAN_FOREGROUND='blue'
+POWERLEVEL9K_VCS_CLEAN_BACKGROUND='green'
+POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='yellow'
+POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='black'
+POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='red'
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='teal'
 #POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 	POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
 	POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
@@ -25,6 +30,7 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
 	POWERLEVEL9K_MODE='nerdfont-complete'
 	source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
 
+POWERLEVEL9K_COLOR_SCHEME='light'
 
 
 # Set list of themes to load
@@ -81,7 +87,8 @@ git
 paths
 zsh-autosuggestions
 locale
-zsh-bd
+bd
+zsh-256color
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -127,3 +134,10 @@ export NVM_DIR="$HOME/.nvm"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/usr/local/sbin:$PATH"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+export PATH="/usr/local/opt/elasticsearch@2.4/bin:$PATH"
