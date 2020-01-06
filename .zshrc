@@ -90,6 +90,8 @@ zsh-autosuggestions
 locale
 bd
 zsh-256color
+vi-mode
+vscode
 )
 
 source $ZSH/oh-my-zsh.sh
