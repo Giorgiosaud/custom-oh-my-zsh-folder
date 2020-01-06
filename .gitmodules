@@ -6,3 +6,7 @@
 	path = plugins/zsh-256color
 	url = git@github.com:chrissicool/zsh-256color.git
 	branch = master
+[submodule "plugins/zsh-autosuggestions"]
+	path = plugins/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
+	branch = master
