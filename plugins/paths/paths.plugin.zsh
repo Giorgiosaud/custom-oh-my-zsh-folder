@@ -20,4 +20,4 @@ if [ -f /usr/local/sbin ]; then
     source /usr/local/sbin
 fi
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-PATH=$PATH:$ANDROID_HOME/tools; PATH=$PATH:$ANDROID_HOME/platform-tools; PATH=$PATH:~/.composer/vendor/bin
+PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:~/.composer/vendor/bin:~/seleniumDrivers/

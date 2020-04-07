@@ -144,3 +144,7 @@ export PATH="/usr/local/sbin:$PATH"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 export PATH="/usr/local/opt/elasticsearch@2.4/bin:$PATH"
+
+export YVM_DIR=/Users/Jorge/.yvm
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
