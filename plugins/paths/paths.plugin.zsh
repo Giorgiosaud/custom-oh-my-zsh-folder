@@ -16,8 +16,11 @@ if [ -f ~/.oh-my-zsh/custom/aliases ]; then
 else
 	print "404: ~/.oh-my-zsh/custom/aliases not found."
 fi
+if [ -f ~/Project/sonar-bin/bin ]; then
+    source ~/Project/sonar-bin/bin
+fi
 if [ -f /usr/local/sbin ]; then
     source /usr/local/sbin
 fi
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:~/.composer/vendor/bin:~/seleniumDrivers/
+PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
