@@ -92,7 +92,7 @@ bd
 zsh-256color
 vi-mode
 vscode
-codeclimate
+codeclimate-run
 )
 
 source $ZSH/oh-my-zsh.sh
