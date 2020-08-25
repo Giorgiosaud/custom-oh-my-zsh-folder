@@ -5,33 +5,34 @@ export ZSH=/Users/Jorge/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
-
-# Customise the Powerlevel9k prompts POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(battery)
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    dir
-	vcs
-	custom_tools
-    vi_mode
-)
-# `vcs` color customization
-POWERLEVEL9K_VCS_CLEAN_FOREGROUND='blue'
-POWERLEVEL9K_VCS_CLEAN_BACKGROUND='green'
-POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='yellow'
-POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='black'
-POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='red'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='gold'
-#POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-	POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
-	POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
-	POWERLEVEL9K_CUSTOM_TOOLS_BACKGROUND="lightsalmon3"
-
-# Load Nerd Fonts with Powerlevel9k theme for Zsh
-	POWERLEVEL9K_MODE='nerdfont-complete'
-	source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
-
-POWERLEVEL9K_COLOR_SCHEME='light'
+#ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="avit"
+#
+## Customise the Powerlevel9k prompts POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(battery)
+#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+#    dir
+#	vcs
+#	custom_tools
+#    vi_mode
+#)
+## `vcs` color customization
+#POWERLEVEL9K_VCS_CLEAN_FOREGROUND='blue'
+#POWERLEVEL9K_VCS_CLEAN_BACKGROUND='green'
+#POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='yellow'
+#POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='black'
+#POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='red'
+#POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='gold'
+##POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+#	POWERLEVEL9K_CUSTOM_TOOLS="echo -n '\ufd42' '\uf898' '\ue736' '\uf81b' '\ue711' '\ufbbd'  "
+#	POWERLEVEL9K_CUSTOM_TOOLS_FOREGROUND="black"
+#	POWERLEVEL9K_CUSTOM_TOOLS_BACKGROUND="lightsalmon3"
+#
+## Load Nerd Fonts with Powerlevel9k theme for Zsh
+#	POWERLEVEL9K_MODE='nerdfont-complete'
+#	source ~/.oh-my-zsh/custom/themes/powerlevel9k/powerlevel9k.zsh-theme
+#
+#POWERLEVEL9K_COLOR_SCHEME='light'
 
 
 # Set list of themes to load
@@ -90,9 +91,9 @@ zsh-autosuggestions
 locale
 bd
 zsh-256color
-vi-mode
 vscode
 codeclimate-run
+zsh-syntax-highlighting
 )
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
@@ -149,3 +150,7 @@ export PATH="/usr/local/opt/php@7.3/bin:$PATH"
 export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
 export YVM_DIR=/usr/local/opt/yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+fpath+=$HOME/.oh-my-zsh/custom/pure
+autoload -U promptinit; promptinit
+prompt pure
+
