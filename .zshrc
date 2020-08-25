@@ -94,7 +94,7 @@ vi-mode
 vscode
 codeclimate-run
 )
-
+ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
