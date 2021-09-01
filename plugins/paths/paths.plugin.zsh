@@ -22,5 +22,9 @@ fi
 if [ -f /usr/local/sbin ]; then
     source /usr/local/sbin
 fi
+if [ -f /Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin ]; then
+  export PATH=$PATH:/Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin
+fi
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
+
