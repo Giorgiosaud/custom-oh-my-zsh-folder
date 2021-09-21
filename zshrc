@@ -152,7 +152,7 @@ export YVM_DIR=/usr/local/opt/yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 fpath+=$HOME/.oh-my-zsh/custom/pure
 autoload -U promptinit; promptinit
-prompt pure
+prompt bart
 
 
 
