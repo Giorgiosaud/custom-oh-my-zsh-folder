@@ -14,3 +14,6 @@
 	path = themes/powerlevel9k
 	url = git@github.com:Powerlevel9k/powerlevel9k.git
 	branch = master
+[submodule "plugins/zsh-syntax-highlighting"]
+	path = plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
