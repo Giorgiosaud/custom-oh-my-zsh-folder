@@ -17,3 +17,7 @@
 [submodule "plugins/zsh-syntax-highlighting"]
 	path = plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "themes/powerlevel10k"]
+	path = themes/powerlevel10k
+	url = git@github.com:romkatv/powerlevel10k.git
+	branch = master
