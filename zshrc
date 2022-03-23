@@ -21,7 +21,7 @@ vscode
 codeclimate-run
 zsh-syntax-highlighting
 node-modules-optimize
-secrets
+#secrets
 )
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
