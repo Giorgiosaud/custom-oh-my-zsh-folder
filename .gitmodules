@@ -21,3 +21,15 @@
 	path = themes/powerlevel10k
 	url = git@github.com:romkatv/powerlevel10k.git
 	branch = master
+[submodule "plugins/brew"]
+	path = plugins/brew
+	url = git@github.com:rhuang2014/brew.git
+[submodule "plugins/node.plugin.zsh"]
+	path = plugins/node.plugin.zsh
+	url = git@github.com:srijanshetty/node.plugin.zsh.git
+[submodule "plugins/zsh-vi-mode"]
+	path = plugins/zsh-vi-mode
+	url = git@github.com:jeffreytse/zsh-vi-mode.git
+[submodule "plugins/omz-plugin-pnpm"]
+	path = plugins/omz-plugin-pnpm
+	url = git@github.com:ntnyq/omz-plugin-pnpm.git

@@ -21,7 +21,10 @@ vscode
 codeclimate-run
 zsh-syntax-highlighting
 node-modules-optimize
-#secrets
+zsh-vi-mode
+pnpm
+npm
+brew
 )
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
@@ -64,8 +67,8 @@ export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 export PATH=/usr/local/bin/php:$PATH
 
 fpath+=$HOME/.oh-my-zsh/custom/pure
-autoload -U promptinit; promptinit
-prompt bart
+#autoload -U promptinit; promptinit
+#prompt bart
 
 # Added by Amplify CLI binary installer
 export PATH="$HOME/.amplify/bin:$PATH"
