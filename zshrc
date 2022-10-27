@@ -13,6 +13,7 @@ plugins=(
 git
 reset-intelij
 paths
+envs
 zsh-autosuggestions
 locale
 bd
@@ -25,6 +26,7 @@ zsh-vi-mode
 pnpm
 npm
 brew
+zsh-history-substring-search
 )
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
@@ -49,11 +51,15 @@ source $ZSH/oh-my-zsh.sh
 if [ -f /Users/jorgesaud/.tnsrc ]; then
 source /Users/jorgesaud/.tnsrc
 fi
+
 ###-tns-completion-end-###
 # nvm initialization
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+#[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 #nvm end
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -75,3 +81,10 @@ export PATH="$HOME/.amplify/bin:$PATH"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+export PNPM_HOME="/Users/giorgiosaud/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi

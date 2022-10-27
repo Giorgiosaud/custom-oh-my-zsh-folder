@@ -30,9 +30,6 @@
 [submodule "plugins/zsh-vi-mode"]
 	path = plugins/zsh-vi-mode
 	url = git@github.com:jeffreytse/zsh-vi-mode.git
-[submodule "plugins/omz-plugin-pnpm"]
-	path = plugins/omz-plugin-pnpm
-	url = git@github.com:ntnyq/omz-plugin-pnpm.git
 [submodule "/Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search"]
 	path = /Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search
 	url = https://github.com/zsh-users/zsh-history-substring-search

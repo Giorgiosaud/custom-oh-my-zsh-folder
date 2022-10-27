@@ -25,6 +25,9 @@ fi
 if [ -f /Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin ]; then
   export PATH=$PATH:/Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin
 fi
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
-
+PATH=$PATH:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
+PATH=$PATH:/Users/giorgiosaud/Projects/flutter/bin
+PATH=$PATH:/Users/giorgiosaud/.rvm/scripts/rvm
+export ANDROID_HOME=~/Library/Android/sdk
+export ANDROID_SDK_ROOT=~/Library/Android/sdk
+export ANDROID_AVD_HOME=~/.android/avd
