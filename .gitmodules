@@ -33,3 +33,6 @@
 [submodule "/Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search"]
 	path = /Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search
 	url = https://github.com/zsh-users/zsh-history-substring-search
+[submodule "plugins/zsh-history-substring-search"]
+	path = plugins/zsh-history-substring-search
+	url = git@github.com:zsh-users/zsh-history-substring-search.git
