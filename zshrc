@@ -23,7 +23,6 @@ codeclimate-run
 zsh-syntax-highlighting
 node-modules-optimize
 zsh-vi-mode
-pnpm
 npm
 brew
 zsh-history-substring-search
