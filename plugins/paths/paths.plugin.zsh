@@ -22,8 +22,11 @@ fi
 if [ -f /usr/local/sbin ]; then
     source /usr/local/sbin
 fi
-if [ -f /Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin ]; then
-  export PATH=$PATH:/Users/Jorge/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin
+if [ -f ~/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin ]; then
+  export PATH=$PATH:~/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin
+fi
+if [ -d ~/.pyenv/shims ]; then
+  export PATH=$PATH:~/.pyenv/shims
 fi
 PATH=$PATH:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
 PATH=$PATH:/Users/giorgiosaud/Projects/flutter/bin
