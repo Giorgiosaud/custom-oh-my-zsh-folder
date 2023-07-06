@@ -13,6 +13,7 @@ export SONAR_HOME=/usr/local/Cellar/sonar-scanner/{version}/libexec
 export SONAR=$SONAR_HOME/bin export PATH=$SONAR:$PATH
 ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
+npm-completion
 git
 reset-intelij
 paths
@@ -88,6 +89,14 @@ export PNPM_HOME="/Users/giorgiosaud/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
+NODE_TLS_REJECT_UNAUTHORIZED=0
+
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
-NODE_TLS_REJECT_UNAUTHORIZED=0
+
+# bun completions
+[ -s "/Users/giorgiosaud/.bun/_bun" ] && source "/Users/giorgiosaud/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
