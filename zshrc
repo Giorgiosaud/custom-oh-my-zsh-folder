@@ -1,3 +1,4 @@
+ZSH_THEME="powerlevel10k/powerlevel10k"
 # Fig pre block. Keep at the top of this file.
 [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -11,7 +12,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export ZSH=~/.oh-my-zsh
 export SONAR_HOME=/usr/local/Cellar/sonar-scanner/{version}/libexec
 export SONAR=$SONAR_HOME/bin export PATH=$SONAR:$PATH
-ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
 npm-completion
 git
@@ -56,7 +56,7 @@ source /Users/jorgesaud/.tnsrc
 fi
 
 ###-tns-completion-end-###
-
+export GPG_TTY=$(tty)
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
@@ -104,3 +104,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="/Users/giorgiosaud/.rvm/bin:$PATH" #UNCOMMENTED
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
+
+PATH=~/.console-ninja/.bin:$PATH
+PATH=~/.console-ninja/.bin:$PATH
+PATH=~/.console-ninja/.bin:$PATH
+PATH=~/.console-ninja/.bin:$PATH
