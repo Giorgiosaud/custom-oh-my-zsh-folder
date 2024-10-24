@@ -57,9 +57,9 @@ fi
 
 ###-tns-completion-end-###
 export GPG_TTY=$(tty)
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+#[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 #nvm end
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -109,3 +109,12 @@ PATH=~/.console-ninja/.bin:$PATH
 PATH=~/.console-ninja/.bin:$PATH
 PATH=~/.console-ninja/.bin:$PATH
 PATH=~/.console-ninja/.bin:$PATH
+
+# Fnm Fast node manager setting
+FNM_PATH="/Users/giorgiosaud/Library/Application Support/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/Users/giorgiosaud/Library/Application Support/fnm:$PATH"
+  eval "`fnm env`"
+fi
+eval "$(fnm env --use-on-cd --shell zsh)"
+
