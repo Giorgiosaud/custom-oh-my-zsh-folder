@@ -1,33 +1,26 @@
 # Amazon Q pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export ZSH=~/.oh-my-zsh
 export SONAR_HOME=/usr/local/Cellar/sonar-scanner/{version}/libexec
 export SONAR=$SONAR_HOME/bin export PATH=$SONAR:$PATH
 plugins=(
-npm-completion
-git
-reset-intelij
-paths
-envs
-zsh-autosuggestions
-locale
-bd
-zsh-256color
-vscode
-codeclimate-run
-zsh-syntax-highlighting
-node-modules-optimize
-zsh-vi-mode
-npm
-brew
+	npm-completion
+	git
+	reset-intelij
+	paths
+	envs
+	zsh-autosuggestions
+	locale
+	bd
+	zsh-256color
+	vscode
+	codeclimate-run
+	zsh-syntax-highlighting
+	node-modules-optimize
+	npm
+	brew
 )
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
@@ -43,8 +36,6 @@ fpath+=$HOME/.oh-my-zsh/custom/pure
 export PATH="$HOME/.amplify/bin:$PATH"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
 
 export PNPM_HOME="/Users/giorgiosaud/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
@@ -63,7 +54,14 @@ PATH=~/.console-ninja/.bin:$PATH
 # Fnm Fast node manager setting
 FNM_PATH="/Users/giorgiosaud/Library/Application Support/fnm"
 if [ -d "$FNM_PATH" ]; then
-  export PATH="/Users/giorgiosaud/Library/Application Support/fnm:$PATH"
-  eval "`fnm env`"
+	export PATH="/Users/giorgiosaud/Library/Application Support/fnm:$PATH"
+	eval "`fnm env`"
 fi
 eval "$(fnm env --use-on-cd --shell zsh)"
+# Add this near the top of your .zshrc file
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+	# Disable fancy prompt features in VS Code terminal
+	POWERLEVEL9K_INSTANT_PROMPT=off
+	# Force synchronous command execution
+	unsetopt zle
+fi
