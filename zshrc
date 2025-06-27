@@ -51,17 +51,14 @@ export PATH="/Users/giorgiosaud/.rvm/bin:$PATH" #UNCOMMENTED
 
 PATH=~/.console-ninja/.bin:$PATH
 
-# Fnm Fast node manager setting
-FNM_PATH="/Users/giorgiosaud/Library/Application Support/fnm"
+# # Fnm Fast node manager setting
+# FNM_PATH="/Users/giorgiosaud/Library/Application Support/fnm"
 if [ -d "$FNM_PATH" ]; then
 	export PATH="/Users/giorgiosaud/Library/Application Support/fnm:$PATH"
 	eval "`fnm env`"
 fi
 eval "$(fnm env --use-on-cd --shell zsh)"
-# Add this near the top of your .zshrc file
+# # Add this near the top of your .zshrc file
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-	# Disable fancy prompt features in VS Code terminal
-	POWERLEVEL9K_INSTANT_PROMPT=off
-	# Force synchronous command execution
-	unsetopt zle
-fi
+ 	# typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+ fi
