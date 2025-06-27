@@ -1,8 +1,7 @@
 # Add your own custom plugins in the custom/plugins directory. Plugins placed
 # here will override ones with the same name in the main plugins directory.
 if [ -f ~/.composer/vendor/bin ]; then
-    A
-export PATH=$PATH:~/.composer/vendor/bin
+  export PATH=$PATH:~/.composer/vendor/bin
 fi
 
 if [ -f ./node_modules/.bin ]; then
@@ -28,9 +27,40 @@ fi
 if [ -d ~/.pyenv/shims ]; then
   export PATH=$PATH:~/.pyenv/shims
 fi
-PATH=$PATH:~/.composer/vendor/bin:~/seleniumDrivers/:~/Projects/sonar-bin/bin
-PATH=$PATH:/Users/giorgiosaud/Projects/flutter/bin
-PATH=$PATH:/Users/giorgiosaud/.rvm/scripts/rvm
-export ANDROID_HOME=~/Library/Android/sdk
-export ANDROID_SDK_ROOT=~/Library/Android/sdk
-export ANDROID_AVD_HOME=~/.android/avd
+if [ -d ~/.rvm/scripts/rvm ]; then
+  export PATH=$PATH:~/.rvm/bin
+fi
+if [ -d ~/.bun/bin ]; then
+  export PATH=$PATH:~/.bun/bin
+fi
+if [ -d ~/.console-ninja/.bin ]; then
+  export PATH=$PATH:~/.console-ninja/.bin
+fi
+if [ -d ~/.amplify/bin ]; then
+  export PATH=$PATH:~/.amplify/bin
+fi
+if [ -d "$FNM_PATH" ]; then
+	export PATH=$PATH:~/Library/Application Support/fnm
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+if [ -d /usr/local/opt/elasticsearch@2.4/bin ]; then
+  export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
+fi
+if [ -d /usr/local/opt/openssl@1.1/bin ]; then
+  export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
+fi
+# bun
+if [ -d "$BUN_INSTALL/bin" ]; then
+  export PATH="$BUN_INSTALL/bin:$PATH"
+  [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+
+fi
+if [ -d ~/.rvm/bin ]; then
+  export PATH=$PATH:~/.rvm/bin #UNCOMMENTED
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+fi
+
+# if [ -d ~/.fnm ]; then
+#   export PATH=$PATH:~/.fnm
+#   eval "$(fnm env --use-on-cd --shell zsh)"
+# fi
