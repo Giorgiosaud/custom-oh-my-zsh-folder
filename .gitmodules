@@ -1,7 +1,3 @@
-[submodule "plugins/zsh-256color"]
-	path = plugins/zsh-256color
-	url = git@github.com:chrissicool/zsh-256color.git
-	branch = master
 [submodule "plugins/zsh-autosuggestions"]
 	path = plugins/zsh-autosuggestions
 	url = git@github.com:zsh-users/zsh-autosuggestions.git
@@ -17,18 +13,9 @@
 	path = themes/powerlevel10k
 	url = git@github.com:romkatv/powerlevel10k.git
 	branch = master
-[submodule "plugins/brew"]
-	path = plugins/brew
-	url = git@github.com:rhuang2014/brew.git
-[submodule "plugins/node.plugin.zsh"]
-	path = plugins/node.plugin.zsh
-	url = git@github.com:srijanshetty/node.plugin.zsh.git
 [submodule "plugins/zsh-vi-mode"]
 	path = plugins/zsh-vi-mode
 	url = git@github.com:jeffreytse/zsh-vi-mode.git
 [submodule "/Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search"]
 	path = /Users/giorgiosaud/.oh-my-zsh/custom/plugins/zsh-history-substring-search
 	url = https://github.com/zsh-users/zsh-history-substring-search
-[submodule "plugins/zsh-history-substring-search"]
-	path = plugins/zsh-history-substring-search
-	url = git@github.com:zsh-users/zsh-history-substring-search.git
