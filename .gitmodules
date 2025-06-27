@@ -1,7 +1,3 @@
-[submodule "plugins/bd"]
-	path = plugins/bd
-	url = git@github.com:Tarrasch/zsh-bd.git
-	branch = master
 [submodule "plugins/zsh-256color"]
 	path = plugins/zsh-256color
 	url = git@github.com:chrissicool/zsh-256color.git

@@ -13,7 +13,6 @@ plugins=(
 	envs
 	zsh-autosuggestions
 	locale
-	bd
 	zsh-256color
 	vscode
 	codeclimate-run
