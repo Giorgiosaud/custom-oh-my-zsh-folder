@@ -1,7 +1,8 @@
 # Amazon Q pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-eval "$(/opt/homebrew/bin/brew shellenv)"
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+
 export ZSH=~/.oh-my-zsh
 export SONAR_HOME=/usr/local/Cellar/sonar-scanner/{version}/libexec
 export SONAR=$SONAR_HOME/bin export PATH=$SONAR:$PATH
