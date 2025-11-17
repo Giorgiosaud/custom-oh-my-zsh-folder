@@ -1,30 +1,31 @@
+# PATH Management Plugin
+# Centralizes all PATH additions for development tools
+# Organized by: local bins, language-specific tools, version managers, and specialized tools
+
+# Local binaries
 if [ -d ~/.local/bin ]; then
 export PATH=$PATH:~/.local/bin
 fi
-if [ -f ~/.composer/vendor/bin ]; then
+if [ -d ~/.composer/vendor/bin ]; then
 export PATH=$PATH:~/.composer/vendor/bin
 fi
 
-if [ -f ./node_modules/.bin ]; then
+# Project-specific bins (relative paths)
+if [ -d ./node_modules/.bin ]; then
 export PATH=$PATH:./node_modules/.bin
 fi
-if [ -f ./vendor/bin ]; then
+if [ -d ./vendor/bin ]; then
 export PATH=$PATH:./vendor/bin
 fi
-if [ -f ~/.oh-my-zsh/custom/aliases ]; then
-source ~/.oh-my-zsh/custom/aliases
-else
-print "404: ~/.oh-my-zsh/custom/aliases not found."
+
+# Development tools
+if [ -d ~/Project/sonar-bin/bin ]; then
+export PATH=$PATH:~/Project/sonar-bin/bin
 fi
-if [ -f ~/Project/sonar-bin/bin ]; then
-source ~/Project/sonar-bin/bin
+if [ -d /usr/local/sbin ]; then
+export PATH=$PATH:/usr/local/sbin
 fi
-if [ -f /usr/local/sbin ]; then
-source /usr/local/sbin
-fi
-if [ -f ~/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin ]; then
-export PATH=$PATH:~/Library/Application\ Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin
-fi
+# Version managers
 if [ -d ~/.pyenv/shims ]; then
 export PATH=$PATH:~/.pyenv/shims
 fi
@@ -40,22 +41,27 @@ fi
 if [ -d ~/.amplify/bin ]; then
 export PATH=$PATH:~/.amplify/bin
 fi
-if [ -d "$FNM_PATH" ]; then
-export PATH=$PATH:~/Library/Application Support/fnm
-eval "$(fnm env --use-on-cd --shell zsh)"
-fi
+# FNM configuration moved to envs plugin
+# Specialized tools and databases
 if [ -d /usr/local/opt/elasticsearch@2.4/bin ]; then
 export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
 fi
 if [ -d /usr/local/opt/openssl@1.1/bin ]; then
 export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
 fi
-# bun
+# Bun JavaScript runtime
 if [ -d "$BUN_INSTALL/bin" ]; then
 export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
 fi
+
+# Ruby Version Manager (RVM)
 if [ -d ~/.rvm/bin ]; then
 export PATH=$PATH:~/.rvm/bin #UNCOMMENTED
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+fi
+# Fnm
+
+if [ -d "$FNM_PATH" ]; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
 fi
