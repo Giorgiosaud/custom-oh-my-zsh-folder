@@ -83,3 +83,99 @@ function has-secret() {
   security find-generic-password -a "$USER" -s "$secret_name" &>/dev/null
   return $?
 }
+
+# Validate GitHub token
+# Usage: validate-github-token
+function validate-github-token() {
+  local token=$(get-secret "github_token")
+
+  if [ -z "$token" ]; then
+    echo "✗ No GitHub token found in keychain"
+    return 1
+  fi
+
+  echo "Validating GitHub token..."
+  local response=$(curl -s -w "%{http_code}" -o /dev/null -H "Authorization: token $token" https://api.github.com/user)
+
+  if [ "$response" = "200" ]; then
+    local user=$(curl -s -H "Authorization: token $token" https://api.github.com/user | grep -o '"login": *"[^"]*"' | sed 's/"login": *"\(.*\)"/\1/')
+    echo "✓ GitHub token is valid (user: $user)"
+    return 0
+  else
+    echo "✗ GitHub token is invalid or expired (HTTP $response)"
+    return 1
+  fi
+}
+
+# Check secret age and warn if old
+# Usage: check-secret-age "secret_name" [days_threshold]
+# Example: check-secret-age "github_token" 90
+function check-secret-age() {
+  local secret_name="$1"
+  local threshold="${2:-90}"  # Default: 90 days
+
+  if ! has-secret "$secret_name"; then
+    echo "✗ Secret '$secret_name' not found"
+    return 1
+  fi
+
+  # Get secret modification date (macOS specific)
+  local mod_date=$(security find-generic-password -a "$USER" -s "$secret_name" 2>/dev/null | grep "mdat" | sed 's/.*"\(.*\)".*/\1/')
+
+  if [ -z "$mod_date" ]; then
+    echo "⚠️  Cannot determine age of secret '$secret_name'"
+    return 0
+  fi
+
+  local secret_timestamp=$(date -j -f "%Y%m%d%H%M%SZ" "$mod_date" +%s 2>/dev/null)
+  local now=$(date +%s)
+  local age_days=$(( (now - secret_timestamp) / 86400 ))
+
+  if [ $age_days -gt $threshold ]; then
+    echo "⚠️  Secret '$secret_name' is $age_days days old (threshold: $threshold days)"
+    echo "   Consider rotating this secret"
+    return 1
+  else
+    echo "✓ Secret '$secret_name' is $age_days days old (within threshold)"
+    return 0
+  fi
+}
+
+# Rotate a secret (helper function)
+# Usage: rotate-secret "secret_name"
+function rotate-secret() {
+  local secret_name="$1"
+
+  if [ -z "$secret_name" ]; then
+    echo "Usage: rotate-secret <secret_name>"
+    return 1
+  fi
+
+  echo "Rotating secret: $secret_name"
+  echo "Current value: $(get-secret "$secret_name" | sed 's/\(.\{10\}\).*/\1.../')"
+  echo ""
+  echo "Enter new value for '$secret_name':"
+  read -s new_value
+
+  if [ -z "$new_value" ]; then
+    echo "✗ No value provided, rotation cancelled"
+    return 1
+  fi
+
+  put-secret "$secret_name" "$new_value"
+  echo "✓ Secret '$secret_name' rotated successfully"
+}
+
+# Check all secrets for age
+# Usage: check-all-secrets [days_threshold]
+function check-all-secrets() {
+  local threshold="${1:-90}"
+
+  echo "Checking all secrets (threshold: $threshold days)..."
+  echo ""
+
+  list-secrets | grep "  - " | sed 's/  - //' | while read secret; do
+    check-secret-age "$secret" "$threshold"
+    echo ""
+  done
+}
