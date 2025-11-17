@@ -2,66 +2,53 @@
 # Centralizes all PATH additions for development tools
 # Organized by: local bins, language-specific tools, version managers, and specialized tools
 
+# Performance: Cache directory checks
+typeset -gA _dir_cache
+_has_dir() {
+  if [[ -z ${_dir_cache[$1]} ]]; then
+    _dir_cache[$1]=$([[ -d $1 ]] && echo 1 || echo 0)
+  fi
+  return $(( ! _dir_cache[$1] ))
+}
+
 # Local binaries
-if [ -d ~/.local/bin ]; then
-export PATH=$PATH:~/.local/bin
-fi
-if [ -d ~/.composer/vendor/bin ]; then
-export PATH=$PATH:~/.composer/vendor/bin
-fi
+_has_dir ~/.local/bin && export PATH=$PATH:~/.local/bin
 
 # Project-specific bins (relative paths)
-if [ -d ./node_modules/.bin ]; then
-export PATH=$PATH:./node_modules/.bin
-fi
-if [ -d ./vendor/bin ]; then
-export PATH=$PATH:./vendor/bin
-fi
+_has_dir ./node_modules/.bin && export PATH=$PATH:./node_modules/.bin
+_has_dir ./vendor/bin && export PATH=$PATH:./vendor/bin
 
 # Development tools
-if [ -d ~/Project/sonar-bin/bin ]; then
-export PATH=$PATH:~/Project/sonar-bin/bin
-fi
-if [ -d /usr/local/sbin ]; then
-export PATH=$PATH:/usr/local/sbin
-fi
+_has_dir ~/Project/sonar-bin/bin && export PATH=$PATH:~/Project/sonar-bin/bin
+_has_dir /usr/local/sbin && export PATH=$PATH:/usr/local/sbin
+
 # Version managers
-if [ -d ~/.pyenv/shims ]; then
-export PATH=$PATH:~/.pyenv/shims
-fi
-if [ -d ~/.rvm/scripts/rvm ]; then
-export PATH=$PATH:~/.rvm/bin
-fi
-if [ -d ~/.bun/bin ]; then
-export PATH=$PATH:~/.bun/bin
-fi
-if [ -d ~/.console-ninja/.bin ]; then
-export PATH=$PATH:~/.console-ninja/.bin
-fi
-if [ -d ~/.amplify/bin ]; then
-export PATH=$PATH:~/.amplify/bin
-fi
-# FNM configuration moved to envs plugin
+_has_dir ~/.pyenv/shims && export PATH=$PATH:~/.pyenv/shims
+_has_dir ~/.rvm/bin && export PATH=$PATH:~/.rvm/bin
+_has_dir ~/.bun/bin && export PATH=$PATH:~/.bun/bin
+_has_dir ~/.console-ninja/.bin && export PATH=$PATH:~/.console-ninja/.bin
+_has_dir ~/.amplify/bin && export PATH=$PATH:~/.amplify/bin
+
 # Specialized tools and databases
-if [ -d /usr/local/opt/elasticsearch@2.4/bin ]; then
-export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
-fi
-if [ -d /usr/local/opt/openssl@1.1/bin ]; then
-export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
-fi
+_has_dir /usr/local/opt/elasticsearch@2.4/bin && export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
+_has_dir /usr/local/opt/openssl@1.1/bin && export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
+
 # Bun JavaScript runtime
-if [ -d "$BUN_INSTALL/bin" ]; then
-export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+if _has_dir "$BUN_INSTALL/bin"; then
+  export PATH="$BUN_INSTALL/bin:$PATH"
+  [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
 fi
 
 # Ruby Version Manager (RVM)
-if [ -d ~/.rvm/bin ]; then
-export PATH=$PATH:~/.rvm/bin #UNCOMMENTED
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+if _has_dir ~/.rvm/bin; then
+  export PATH=$PATH:~/.rvm/bin
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 fi
-# Fnm
 
-if [ -d "$FNM_PATH" ]; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
+# FNM (Fast Node Manager)
+_has_dir "$FNM_PATH" && eval "$(fnm env --use-on-cd --shell zsh)"
+
+# Load custom aliases
+if [ -f ~/.oh-my-zsh/custom/aliases ]; then
+  source ~/.oh-my-zsh/custom/aliases
 fi
