@@ -34,7 +34,7 @@ _has_dir /usr/local/opt/elasticsearch@2.4/bin && export PATH=$PATH:/usr/local/op
 _has_dir /usr/local/opt/openssl@1.1/bin && export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
 
 # Java version
-_has_dir /Users/giorgiosaud/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home && export JAVA_HOME=/Users/giorgiosaud/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home && export PATH=$JAVA_HOME/bin:$PATH
+_has_dir "$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home" && export JAVA_HOME="$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home" && export PATH=$JAVA_HOME/bin:$PATH
 # Bun JavaScript runtime
 if _has_dir "$BUN_INSTALL/bin"; then
   export PATH="$BUN_INSTALL/bin:$PATH"
@@ -64,7 +64,7 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
 
 # bun completions
-[ -s "/Users/giorgiosaud/.bun/_bun" ] && source "/Users/giorgiosaud/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
