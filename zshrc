@@ -45,6 +45,5 @@ if [[ "$TERM_PROGRAM" == "vscode" ]]; then
 fi
 
 # Secure secret management via apple-secret plugin
-export GITHUB_TOKEN=$(get-secret "github_token")
+#export GITHUB_TOKEN=$(get-secret "github_token")
 export GITHUB_USERNAME=giorgiosaud
-

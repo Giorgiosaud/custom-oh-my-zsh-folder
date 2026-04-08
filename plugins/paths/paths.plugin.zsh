@@ -33,6 +33,8 @@ _has_dir ~/.amplify/bin && export PATH=$PATH:~/.amplify/bin
 _has_dir /usr/local/opt/elasticsearch@2.4/bin && export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
 _has_dir /usr/local/opt/openssl@1.1/bin && export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
 
+# Java version
+_has_dir /Users/giorgiosaud/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home && export JAVA_HOME=/Users/giorgiosaud/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home && export PATH=$JAVA_HOME/bin:$PATH
 # Bun JavaScript runtime
 if _has_dir "$BUN_INSTALL/bin"; then
   export PATH="$BUN_INSTALL/bin:$PATH"
@@ -52,3 +54,18 @@ _has_dir "$FNM_PATH" && eval "$(fnm env --use-on-cd --shell zsh)"
 if [ -f ~/.oh-my-zsh/custom/aliases ]; then
   source ~/.oh-my-zsh/custom/aliases
 fi
+# brew paths
+if [ -f /opt/homebrew/bin ]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select
+
+# bun completions
+[ -s "/Users/giorgiosaud/.bun/_bun" ] && source "/Users/giorgiosaud/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
