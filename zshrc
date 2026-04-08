@@ -31,6 +31,7 @@ plugins=(
 	smart-npm
 	docker-utils
 	zsh-monitor
+	claude-status
 )
 
 source $ZSH/oh-my-zsh.sh
