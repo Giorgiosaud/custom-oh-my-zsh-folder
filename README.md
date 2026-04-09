@@ -1,6 +1,6 @@
 # Custom Oh My Zsh Configuration
 
-Portable, secure Zsh configuration for easy Mac setup with optimized performance and secret management.
+Portable, secure Zsh configuration for easy Mac setup with optimized performance, secret management, and Claude Code integration.
 
 ## Quick Setup (New Mac)
 
@@ -21,143 +21,143 @@ Portable, secure Zsh configuration for easy Mac setup with optimized performance
    cat ~/.oh-my-zsh/custom/minimal-zshrc-template.txt > ~/.zshrc
    ```
 
-4. **Store your secrets securely**
+4. **Install dependencies**
+   ```bash
+   brew install jq
+   ```
+
+5. **Store your secrets securely**
    ```bash
    put-secret "github_token" "your_github_token"
    ```
 
-5. **Reload shell**
+6. **Reload shell**
    ```bash
-   source ~/.zshrc
+   exec zsh
    ```
+
+That's it. On reload, the plugins will automatically:
+- Symlink `~/.vimrc` and install vim plugins (`vim-config`)
+- Install the Claude API latency sampler via launchd (`claude-status`)
+- Register the `claude_latency` Powerlevel10k segment
+- Set up lazy-loaded version managers and completions
+
+### Register Claude Code statusline (optional)
+
+```bash
+claude-status-register
+```
 
 > Fork this repo and use your own GitHub reference for personal customization
 
-## Existing Installation Cleanup
-
-If you're cleaning up an existing setup, see **`CLEANUP_INSTRUCTIONS.md`** for step-by-step guide to:
-- Remove hardcoded secrets from main `.zshrc`
-- Consolidate everything into custom folder
-- Migrate to minimal `.zshrc` template
-
 ## What's Included
 
-### Plugins (10 Total)
-- **envs** - Environment variables (FNM, Android SDK, etc.)
-- **paths** - PATH management for development tools
-- **apple-secret** - 🔐 Secure secret management via macOS Keychain
-- **lazy-load** - Performance optimization (lazy-loads heavy plugins)
-- **git** - Git shortcuts and aliases
-- **reset-intelij** - JetBrains IDE trial reset utility
-- **vscode** - Visual Studio Code integration
-- **node-modules-optimize** - Node.js utilities
-- **zsh-vi-mode** - Vi keybindings
-- **zsh-autosuggestions** + **zsh-syntax-highlighting** (lazy-loaded)
+### Plugins
 
-### Aliases
-60+ shortcuts for:
-- Laravel/PHP Artisan commands (`art`, `mmod`, `mmig`, etc.)
-- Git workflows (`dev`, `prod`, `gacp()`, `gdump()`)
-- Modyo CLI (`myc`, `mys`, `myp`)
-- Custom functions for productivity
+| Plugin | Description |
+|--------|-------------|
+| `envs` | Environment variables (FNM, Android SDK, etc.) |
+| `paths` | PATH management for development tools |
+| `apple-secret` | Secure secret management via macOS Keychain |
+| `lazy-load` | Performance optimization (lazy-loads heavy plugins) |
+| `aliases` | 60+ shortcuts for Laravel, Git, Modyo, etc. |
+| `async-loader` | Async plugin loading |
+| `lazy-version-managers` | Lazy-loaded fnm, rbenv, pyenv |
+| `smart-npm` | Smart npm/pnpm/yarn detection |
+| `docker-utils` | Docker shortcuts and utilities |
+| `zsh-monitor` | Shell monitoring |
+| `zsh-vi-mode` | Vi keybindings in the shell |
+| `claude-status` | Claude API latency in p10k prompt + Claude Code statusline |
+| `vim-config` | Centralized vim configuration with auto-setup |
+| `reset-intelij` | JetBrains IDE trial reset utility |
+| `zsh-autosuggestions` | Auto-completion (lazy-loaded) |
+| `zsh-syntax-highlighting` | Syntax checking (lazy-loaded) |
 
 ### Theme
-**Powerlevel10k** - Fast, customizable prompt with lean configuration
+**Powerlevel10k** — Fast, customizable prompt with lean configuration
 
-### Version Managers
-- fnm (Fast Node Manager)
-- rbenv/rvm (Ruby)
-- pyenv (Python)
-- Bun (JavaScript runtime)
+### Claude Code Integration (`claude-status`)
+- Powerlevel10k segment auto-registered — shows API latency with color-coded levels
+- Claude Code statusline — same indicator in the status bar (register with `claude-status-register`)
+- macOS launchd job pings Anthropic's HTTP stack every 60s — no API key, no tokens
+- Statistical thresholds adapt from 30-day rolling baseline (median + stdev)
+- See `plugins/claude-status/README.md` for details
 
-## Performance Optimizations
-
-This configuration includes several optimizations:
-1. **Lazy-loading** - Heavy plugins load after first prompt
-2. **Consolidated FNM** - Single configuration point
-3. **Removed unused tools** - nvm removed (not used)
-4. **Fixed bugs** - PATH checks use correct conditionals
-
-## Security 🔐
-
-**✓ Secure Secret Management Implemented!**
-
-This configuration uses the **apple-secret** plugin for secure credential storage:
-```bash
-# Secrets are retrieved from macOS Keychain, never hardcoded
-export GITHUB_TOKEN=$(get-secret "github_token")
-export NPM_TOKEN=$(get-secret "npm_token")
-```
-
-### Quick Start
-```bash
-# Store a secret
-put-secret "github_token" "your_token_here"
-
-# It's now safely encrypted in keychain!
-```
-
-- See `SECURITY.md` for complete guide
-- See `plugins/apple-secret/README.md` for detailed usage
-- **Never hardcode tokens** - always use keychain
+### Vim Configuration (`vim-config`)
+- Auto-symlinks `~/.vimrc` and bootstraps vim-plug on first run
+- Onedark theme, lightline statusline, FZF integration
+- ALE linting, vim-surround, vim-commentary
+- Cursor shape changes per mode (bar/block/underline)
+- See `plugins/vim-config/vimrc` for full config
 
 ## File Structure
 
 ```
 custom/
-├── plugins/              # Custom and third-party plugins
-│   ├── envs/            # Environment variables
-│   ├── paths/           # PATH management
-│   ├── apple-secret/    # 🔐 Keychain secret management
-│   ├── lazy-load/       # Performance optimization
-│   ├── reset-intelij/   # JetBrains trial reset
-│   ├── node-modules-optimize/  # Node.js utilities
-│   ├── zsh-autosuggestions/    # Auto-completion (lazy-loaded)
-│   ├── zsh-syntax-highlighting/  # Syntax checking (lazy-loaded)
-│   └── zsh-vi-mode/     # Vi keybindings
-├── themes/              # Powerlevel10k theme
-├── aliases              # Shell aliases (60+ shortcuts)
-├── zshrc               # Main configuration (sources everything)
-├── minimal-zshrc-template.txt  # Template for main ~/.zshrc
-├── README.md           # Overview and quick start
-├── DEFINITIONS.md      # Complete reference and documentation
-├── SECURITY.md         # Security best practices
-└── FUTURE_IMPROVEMENTS.md  # Optimization opportunities
+├── plugins/
+│   ├── aliases/              # Shell aliases
+│   ├── apple-secret/         # Keychain secret management
+│   ├── async-loader/         # Async plugin loading
+│   ├── claude-status/        # Claude API latency monitor
+│   │   ├── latency-common.sh           # Shared cache reader
+│   │   ├── latency-sampler.sh          # HTTP ping (run by launchd)
+│   │   ├── statusline.sh               # Claude Code statusline
+│   │   └── com.giorgiosaud.claude.latency.plist  # launchd template
+│   ├── docker-utils/         # Docker shortcuts
+│   ├── envs/                 # Environment variables
+│   ├── lazy-load/            # Lazy-loading framework
+│   ├── lazy-version-managers/ # fnm, rbenv, pyenv
+│   ├── paths/                # PATH management
+│   ├── smart-npm/            # npm/pnpm/yarn detection
+│   ├── vim-config/           # Centralized vim config
+│   │   ├── vimrc                       # The vim configuration
+│   │   └── vim-config.plugin.zsh       # Auto-symlink setup
+│   ├── zsh-autosuggestions/  # (lazy-loaded)
+│   ├── zsh-syntax-highlighting/  # (lazy-loaded)
+│   └── zsh-vi-mode/          # Vi keybindings
+├── themes/                   # Powerlevel10k theme
+├── p10k-custom.zsh          # p10k overrides (version-controlled)
+├── zshrc                    # Main configuration
+├── minimal-zshrc-template.txt  # Template for ~/.zshrc
+├── DEFINITIONS.md           # Complete reference
+├── SECURITY.md              # Security best practices
+└── FUTURE_IMPROVEMENTS.md   # Optimization opportunities
 ```
+
+## Security
+
+Secrets are managed via macOS Keychain — never hardcoded:
+```bash
+put-secret "github_token" "your_token_here"   # store
+get-secret "github_token"                       # retrieve
+```
+
+See `SECURITY.md` and `plugins/apple-secret/README.md` for details.
 
 ## Maintenance
 
-### Update Plugins
+### Update submodule plugins
 ```bash
 cd ~/.oh-my-zsh/custom/themes/powerlevel10k && git pull
 cd ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && git pull
 cd ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && git pull
 ```
 
-### Test Shell Startup Speed
+### Update vim plugins
+```bash
+vim +PlugUpdate +qa
+```
+
+### Test shell startup speed
 ```bash
 time zsh -i -c exit
 ```
 
-## Documentation
-
-- **`README.md`** - This file (overview and setup)
-- **`DEFINITIONS.md`** - Complete reference: structure, components, how everything works
-- **`SECURITY.md`** - Security best practices and apple-secret guide
-- **`FUTURE_IMPROVEMENTS.md`** - Optimization opportunities and enhancements
-- **`minimal-zshrc-template.txt`** - Template for main ~/.zshrc
-- **`plugins/apple-secret/README.md`** - Detailed secret management guide
-
 ## Troubleshooting
 
-- **Slow startup**: Verify lazy-loading is enabled
-- **Missing commands**: Check PATH with `echo $PATH`
-- **Alias conflicts**: Run `alias` to see all aliases
+- **Slow startup**: Verify lazy-loading is enabled, run `time zsh -i -c exit`
+- **Claude latency not showing**: Run `p10k reload`, check `launchctl list com.giorgiosaud.claude.latency`
+- **Vim plugins missing**: Run `vim +PlugInstall +qa`
+- **Icons not rendering**: Use a Nerd Font (MesloLGS NF recommended)
 - **Secret not working**: Run `get-secret "github_token"` to test keychain
 - **Need details**: See `DEFINITIONS.md` for complete reference
-
-## Resources
-
-- [Oh My Zsh Wiki](https://github.com/ohmyzsh/ohmyzsh/wiki)
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
-- [Zsh Documentation](http://zsh.sourceforge.net/)
