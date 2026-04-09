@@ -32,6 +32,7 @@ plugins=(
 	docker-utils
 	zsh-monitor
 	claude-status
+	vim-config
 )
 
 source $ZSH/oh-my-zsh.sh
