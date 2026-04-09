@@ -1,0 +1,115 @@
+" vim-config — managed by oh-my-zsh custom plugin
+" Auto-installs vim-plug and plugins on first run.
+
+" --- Bootstrap vim-plug ---
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" --- General ---
+filetype indent on
+syntax on
+set background=dark
+set number
+set relativenumber
+set laststatus=2
+set hidden
+set history=500
+set nowrap
+set nobackup
+set noswapfile
+set tabstop=4
+set expandtab
+set softtabstop=4
+set shiftwidth=4
+set backspace=2
+set encoding=utf-8
+set wildmenu
+set ignorecase
+set smartcase
+set splitbelow
+set splitright
+set autoread
+set timeout ttimeout timeoutlen=200
+set smartindent
+set scrolloff=5
+set autoindent
+set autowriteall
+set hlsearch
+set incsearch
+set showmatch
+set noerrorbells visualbell t_vb=
+set signcolumn=yes
+set cursorline
+
+" --- Cursor shape per mode (works in iTerm2/Terminal.app) ---
+let &t_SI = "\e[6 q"   " insert: bar
+let &t_EI = "\e[2 q"   " normal: block
+let &t_SR = "\e[4 q"   " replace: underline
+
+" --- Leader ---
+let mapleader=","
+
+" --- Key mappings ---
+map <leader>s :source $MYVIMRC<CR>
+map <leader>ev :e $MYVIMRC<CR>
+map <leader>p :FZF<CR>
+map <C-p> :FilesMru --tiebreak=index<CR>
+nmap <leader>e :MRU<CR>
+nmap <leader>w :bd<CR>
+nmap ;w :w<CR>
+nmap <C-]> g<C-]>
+imap jj <Esc>
+nnoremap <silent> <Esc> :nohlsearch<Bar>:echo<CR>
+
+" Window navigation
+map <D-A-RIGHT> <C-w>l
+map <D-A-LEFT> <C-w>h
+map <D-A-DOWN> <C-w><C-w>
+map <D-A-UP> <C-w>W
+
+" Strip trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+
+" --- FZF ---
+set rtp+=/usr/local/opt/fzf
+let $FZF_DEFAULT_COMMAND = 'ag --skip-vcs-ignores -g ""'
+let g:fzf_filemru_bufwrite = 1
+let g:fzf_filemru_git_ls = 1
+let g:fzf_filemru_ignore_submodule = 1
+
+" --- Lightline ---
+let g:lightline = {
+\ 'colorscheme': 'one',
+\ }
+
+" --- ALE ---
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 1
+let g:ale_fix_on_save = 0
+
+" --- Plugins ---
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-sensible'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'yegappan/mru'
+Plug 'dense-analysis/ale'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'tweekmonster/fzf-filemru'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'joshdick/onedark.vim'
+call plug#end()
+
+" --- Colorscheme (after plug#end) ---
+if has('termguicolors')
+  set termguicolors
+endif
+silent! colorscheme onedark
