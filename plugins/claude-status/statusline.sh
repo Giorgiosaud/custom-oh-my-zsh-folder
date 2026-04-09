@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Claude Code statusline — Nerd Font icons, progress bars, latency indicator
 
-CACHE="$HOME/.claude/latency_cache.json"
+source "$(dirname "$0")/latency-common.sh"
 
 input=$(cat)
 
@@ -47,20 +47,11 @@ if [ -n "$five_pct" ]; then
 fi
 
 latency_segment=""
-if [ -f "$CACHE" ]; then
-  level=$(jq -r '.level // "normal"' "$CACHE" 2>/dev/null)
-  ms=$(jq -r '.ms // ""' "$CACHE" 2>/dev/null)
-  case "$level" in
-    normal)      icon="" ;;
-    warn)        icon="" ;;
-    peak)        icon="" ;;
-    unavailable) icon="ﮤ" ;;
-    *)           icon="" ;;
-  esac
-  if [ -n "$ms" ] && [ "$ms" != "null" ]; then
-    latency_segment=" | ${icon} ${ms}ms"
+if claude_latency_read; then
+  if [ -n "$CLAUDE_LATENCY_MS" ] && [ "$CLAUDE_LATENCY_MS" != "null" ]; then
+    latency_segment=" | ${CLAUDE_LATENCY_ICON} ${CLAUDE_LATENCY_MS}ms"
   else
-    latency_segment=" | ${icon}"
+    latency_segment=" | ${CLAUDE_LATENCY_ICON}"
   fi
 fi
 

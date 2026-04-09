@@ -29,7 +29,7 @@ fi
 now=$(date +%s)
 hour=$(date +%-H)
 weekday=$(date +%u)
-cutoff=$(( now - 7 * 86400 ))
+cutoff=$(( now - 30 * 86400 ))
 
 python3 - <<PYEOF
 import json, statistics
@@ -52,18 +52,28 @@ samples = [
     and e["ms"] is not None
 ]
 
-if len(samples) >= 3:
+if len(samples) >= 30:
     baseline = statistics.median(samples)
-    ratio = $ms / baseline
-    if ratio < 1.4:
-        level = "normal"
-    elif ratio < 2.0:
+    stdev = statistics.stdev(samples)
+    warn_threshold = baseline + stdev       # ~84th percentile
+    peak_threshold = baseline + 2 * stdev   # ~97.5th percentile
+    if $ms > peak_threshold:
+        level = "peak"
+    elif $ms > warn_threshold:
         level = "warn"
     else:
-        level = "peak"
-    result = {"ms": $ms, "baseline": round(baseline), "ratio": round(ratio, 2), "level": level}
+        level = "normal"
+    result = {
+        "ms": $ms,
+        "baseline": round(baseline),
+        "stdev": round(stdev),
+        "warn_threshold": round(warn_threshold),
+        "peak_threshold": round(peak_threshold),
+        "level": level,
+        "samples": len(samples),
+    }
 else:
-    result = {"ms": $ms, "baseline": None, "ratio": None, "level": "normal"}
+    result = {"ms": $ms, "baseline": None, "stdev": None, "level": "normal", "samples": len(samples)}
 
 with open("$CACHE", "w") as f:
     json.dump(result, f)

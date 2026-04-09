@@ -3,10 +3,5 @@
 # Add all p10k customizations here so they are version-controlled and
 # automatically applied on any machine after pulling this repo.
 #
-# Setup (one-time per machine): add this line to the END of ~/.p10k.zsh:
-#   [[ -f ~/.oh-my-zsh/custom/p10k-custom.zsh ]] && source ~/.oh-my-zsh/custom/p10k-custom.zsh
-
-# --- claude_latency segment ---
-# Appends the Claude API latency indicator to the right prompt.
-# Requires the claude-status plugin (plugins/claude-status/).
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(claude_latency)
+# Note: claude_latency segment is auto-registered by the claude-status plugin.
+# No manual setup needed — just enable the plugin in .zshrc.

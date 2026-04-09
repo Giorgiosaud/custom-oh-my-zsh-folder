@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.claude.latency</string>
+    <string>com.giorgiosaud.claude.latency</string>
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
         <string>__SAMPLER_PATH__</string>
     </array>
     <key>StartInterval</key>
-    <integer>900</integer>
+    <integer>60</integer>
     <key>RunAtLoad</key>
     <true/>
     <key>StandardOutPath</key>

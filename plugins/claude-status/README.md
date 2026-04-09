@@ -1,38 +1,31 @@
 # claude-status
 
-An oh-my-zsh plugin that shows Claude API load in your terminal prompt and Claude Code statusline.
+An oh-my-zsh plugin that shows Claude API latency in your terminal prompt and Claude Code statusline.
 
 ## What It Does
 
-- **Powerlevel10k segment** — shows a Nerd Font icon + latency (ms) on the right prompt
-- **Claude Code statusline** — adds the same indicator to the Claude Code status bar
-- **Background sampler** — launchd job pings `api.anthropic.com:443` every 15 min, no tokens consumed
+- **Powerlevel10k segment** — auto-registered on the right prompt, no manual config needed
+- **Claude Code statusline** — register with a single command
+- **Background sampler** — macOS launchd job pings `api.anthropic.com:443` every 60s, no tokens consumed
 
 ### Latency levels
 
 | Icon | Color | Condition |
 |------|-------|-----------|
-|  (bolt) | Green | Normal — < 1.4× baseline |
-|  (warning) | Yellow | Elevated — 1.4× – 2× baseline |
-|  (heartbeat) | Red | Peak — > 2× baseline |
-|  (shield) | Grey | Unavailable — TCP timeout |
+| bolt | Green | Normal — within 1 stdev of baseline |
+| warning | Yellow | Elevated — 1–2 stdev above baseline |
+| heartbeat | Red | Peak — > 2 stdev above baseline |
+| shield | Grey | Unavailable — TCP timeout |
 
-The baseline is the median of samples taken at the same hour (±1) and weekday over the last 7 days. Until 3 samples exist for the current time window, only the raw ms is shown.
+The baseline is the median of samples taken at the same hour (+/-1) and weekday over the last 30 days. Requires 30+ samples before statistical thresholds activate.
 
 ---
 
 ## Installation
 
-### 1. Pull the repo
+### 1. Enable the plugin
 
-```zsh
-cd ~/.oh-my-zsh/custom
-git pull
-```
-
-### 2. Add the plugin to your zshrc
-
-In `~/.oh-my-zsh/custom/zshrc` (or wherever your `plugins=(...)` list lives):
+In `~/.zshrc` (inside your `plugins=(...)` list):
 
 ```zsh
 plugins=(
@@ -41,31 +34,29 @@ plugins=(
 )
 ```
 
-### 3. Add the Powerlevel10k segment (manual — `~/.p10k.zsh` is not in this repo)
-
-Open `~/.p10k.zsh` and find `POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS`. Add `claude_latency` at the end:
+### 2. Reload
 
 ```zsh
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-  # ... existing segments ...
-  claude_latency
-)
+exec zsh
 ```
 
-### 4. Reload
+That's it. The plugin will:
+- Auto-register the `claude_latency` p10k segment on the right prompt
+- Install the launchd job (`com.giorgiosaud.claude.latency`) to sample every 60 seconds
 
-Open a new iTerm tab (or run `exec zsh`). The plugin will:
-- Sync the Claude Code statusline script to `~/.claude/statusline-command.sh`
-- Install and start the launchd job `com.claude.latency` automatically
-- Begin sampling after ~15 seconds (RunAtLoad)
+### 3. Register Claude Code statusline (optional, one-time)
 
-Run `p10k reload` if the segment doesn't appear immediately.
+```zsh
+claude-status-register
+```
+
+This writes the statusline config to `~/.claude/settings.json`. Restart Claude Code to apply.
 
 ---
 
 ## Dependencies
 
-All are standard on macOS:
+All standard on macOS:
 
 | Tool | Purpose |
 |------|---------|
@@ -78,27 +69,38 @@ Install jq if missing: `brew install jq`
 
 ---
 
-## Runtime Files
+## File Layout
+
+All scripts live in the plugin directory — nothing is copied outside.
+
+| Plugin file | Purpose |
+|-------------|---------|
+| `claude-status.plugin.zsh` | Plugin init, p10k segment, auto-register |
+| `latency-common.sh` | Shared cache reader (sourced by statusline + segment) |
+| `latency-sampler.sh` | TCP ping + baseline calculation (run by launchd) |
+| `statusline.sh` | Claude Code statusline renderer |
+| `com.giorgiosaud.claude.latency.plist` | launchd job template |
+
+### Runtime files (created automatically)
 
 | File | Description |
 |------|-------------|
-| `~/.claude/statusline-command.sh` | Synced on every shell load |
-| `~/.claude/latency_log.json` | Rolling 7-day history (max ~35KB) |
+| `~/.claude/latency_log.json` | Rolling 30-day sample history |
 | `~/.claude/latency_cache.json` | Latest result read by prompt and statusline |
 | `~/.claude/latency-sampler.log` | Sampler stdout/stderr |
-| `~/Library/LaunchAgents/com.claude.latency.plist` | Rendered launchd plist |
+| `~/Library/LaunchAgents/com.giorgiosaud.claude.latency.plist` | Rendered launchd plist |
 
 ---
 
 ## Troubleshooting
 
-**Segment not showing after pull on a new Mac:**
-- Check `~/.p10k.zsh` has `claude_latency` in `POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS`
-- Run `p10k reload`
+**Segment not showing:**
+- Run `p10k reload` — the auto-register runs on first `precmd` after p10k loads
+- Verify: `print -l $POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS` should include `claude_latency`
 
 **Icons not rendering:**
 - Confirm your terminal font is MesloLGS NF (or another Nerd Font)
 
 **Cache not updating:**
-- Check `launchctl list com.claude.latency` — if missing, run `exec zsh` to reinstall
+- Check `launchctl list com.giorgiosaud.claude.latency` — if missing, run `exec zsh` to reinstall
 - Check `~/.claude/latency-sampler.log` for errors
