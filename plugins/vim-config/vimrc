@@ -75,8 +75,8 @@ map <D-A-UP> <C-w>W
 autocmd BufWritePre * :%s/\s\+$//e
 
 " --- FZF ---
-set rtp+=/usr/local/opt/fzf
-let $FZF_DEFAULT_COMMAND = 'ag --skip-vcs-ignores -g ""'
+set rtp+=/opt/homebrew/opt/fzf
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git"'
 let g:fzf_filemru_bufwrite = 1
 let g:fzf_filemru_git_ls = 1
 let g:fzf_filemru_ignore_submodule = 1
