@@ -48,10 +48,17 @@ fi
 
 latency_segment=""
 if claude_latency_read; then
+  case "$CLAUDE_LATENCY_LEVEL" in
+    normal)      _lcolor="\033[0;32m" ;;   # green
+    warn)        _lcolor="\033[0;33m" ;;   # yellow
+    peak)        _lcolor="\033[0;31m" ;;   # red
+    unavailable) _lcolor="\033[0;90m" ;;   # grey
+    *)           _lcolor="\033[0m"    ;;
+  esac
   if [ -n "$CLAUDE_LATENCY_MS" ] && [ "$CLAUDE_LATENCY_MS" != "null" ]; then
-    latency_segment=" | ${CLAUDE_LATENCY_ICON} ${CLAUDE_LATENCY_MS}ms"
+    latency_segment=" | ${_lcolor}${CLAUDE_LATENCY_ICON} ${CLAUDE_LATENCY_MS}ms\033[0m"
   else
-    latency_segment=" | ${CLAUDE_LATENCY_ICON}"
+    latency_segment=" | ${_lcolor}${CLAUDE_LATENCY_ICON}\033[0m"
   fi
 fi
 
@@ -66,4 +73,4 @@ if [ -n "$model" ]; then
   printf " \033[2m %s\033[0m" "$model"
 fi
 
-printf "%s%s%s\n" "$ctx_segment" "$rate_segment" "$latency_segment"
+printf "%s%s%b\n" "$ctx_segment" "$rate_segment" "$latency_segment"

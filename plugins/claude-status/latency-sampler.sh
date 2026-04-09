@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
-# Measures TCP latency to api.anthropic.com:443, appends to rolling log, writes level cache.
+# Measures HTTP latency to api.anthropic.com, appends to rolling log, writes level cache.
+# Uses an unauthenticated POST (gets 401) to measure full HTTP stack — no API key or tokens needed.
 
 LOG="$HOME/.claude/latency_log.json"
 CACHE="$HOME/.claude/latency_cache.json"
-HOST="api.anthropic.com"
-PORT=443
 TIMEOUT=10
 
 mkdir -p "$HOME/.claude"
 
-# --- Measure TCP latency via nc ---
+# --- Measure HTTP latency via curl (401 response, no tokens consumed) ---
 ms="unavailable"
-start=$(python3 -c "import time; print(int(time.time()*1000))")
-if nc -z -w "$TIMEOUT" "$HOST" "$PORT" 2>/dev/null; then
-  end=$(python3 -c "import time; print(int(time.time()*1000))")
-  ms=$(( end - start ))
+curl_time=$(curl -s -o /dev/null -w "%{time_total}" \
+  --max-time "$TIMEOUT" \
+  -X POST \
+  -H "content-type: application/json" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{"model":"claude-haiku-4-5-20251001","max_tokens":1,"messages":[{"role":"user","content":"h"}]}' \
+  "https://api.anthropic.com/v1/messages" 2>/dev/null)
+
+if [ $? -eq 0 ] && [ -n "$curl_time" ]; then
+  ms=$(python3 -c "print(int(float('$curl_time') * 1000))")
 fi
 
 # --- Handle unavailable ---
