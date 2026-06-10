@@ -1,8 +1,7 @@
 # PATH Management Plugin
 # Centralizes all PATH additions for development tools
-# Organized by: local bins, language-specific tools, version managers, and specialized tools
 
-# Performance: Cache directory checks
+# 1. Performance: Cache directory checks
 typeset -gA _dir_cache
 _has_dir() {
   if [[ -z ${_dir_cache[$1]} ]]; then
@@ -11,61 +10,61 @@ _has_dir() {
   return $(( ! _dir_cache[$1] ))
 }
 
-# Local binaries
-_has_dir ~/.local/bin && export PATH=$PATH:~/.local/bin
-
-# Project-specific bins (relative paths)
-_has_dir ./node_modules/.bin && export PATH=$PATH:./node_modules/.bin
-_has_dir ./vendor/bin && export PATH=$PATH:./vendor/bin
-
-# Development tools
-_has_dir ~/Project/sonar-bin/bin && export PATH=$PATH:~/Project/sonar-bin/bin
-_has_dir /usr/local/sbin && export PATH=$PATH:/usr/local/sbin
-
-# Version managers
-_has_dir ~/.pyenv/shims && export PATH=$PATH:~/.pyenv/shims
-_has_dir ~/.rvm/bin && export PATH=$PATH:~/.rvm/bin
-_has_dir ~/.bun/bin && export PATH=$PATH:~/.bun/bin
-_has_dir ~/.console-ninja/.bin && export PATH=$PATH:~/.console-ninja/.bin
-_has_dir ~/.amplify/bin && export PATH=$PATH:~/.amplify/bin
-
-# Specialized tools and databases
-_has_dir /usr/local/opt/elasticsearch@2.4/bin && export PATH=$PATH:/usr/local/opt/elasticsearch@2.4/bin
-_has_dir /usr/local/opt/openssl@1.1/bin && export PATH=$PATH:/usr/local/opt/openssl@1.1/bin
-
-# Java version
-_has_dir "$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home" && export JAVA_HOME="$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home" && export PATH=$JAVA_HOME/bin:$PATH
-# Bun JavaScript runtime
-if _has_dir "$BUN_INSTALL/bin"; then
-  export PATH="$BUN_INSTALL/bin:$PATH"
-  [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+# 2. Entorno básico y herramientas críticas (Van al INICIO del PATH)
+# Homebrew (Corregido de -f a -d)
+if [[ -d /opt/homebrew/bin ]]; then
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 fi
 
-# Ruby Version Manager (RVM)
-if _has_dir ~/.rvm/bin; then
-  export PATH=$PATH:~/.rvm/bin
-  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+# Local bins del usuario
+_has_dir ~/.local/bin && export PATH="~/.local/bin:$PATH"
+
+
+# 3. Runtimes y Version Managers
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+if _has_dir "$BUN_INSTALL/bin"; then
+  export PATH="$BUN_INSTALL/bin:$PATH"
+  [[ -s "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
 fi
 
 # FNM (Fast Node Manager)
-_has_dir "$FNM_PATH" && eval "$(fnm env --use-on-cd --shell zsh)"
-
-# Load custom aliases
-if [ -f ~/.oh-my-zsh/custom/aliases ]; then
-  source ~/.oh-my-zsh/custom/aliases
-fi
-# brew paths
-if [ -f /opt/homebrew/bin ]; then
-    export PATH="/opt/homebrew/bin:$PATH"
+# Si usas FNM, usualmente se inicializa directo. Si requiere FNM_PATH, asegúrate de definirla antes.
+if (( $+commands[fnm] )); then
+  eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
+# Pyenv & Ruby/RVM
+_has_dir ~/.pyenv/shims && export PATH="$HOME/.pyenv/shims:$PATH"
 
+if _has_dir ~/.rvm/bin; then
+  export PATH="$PATH:$HOME/.rvm/bin"
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+fi
+
+# Java (Corretto)
+if _has_dir "$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home"; then
+  export JAVA_HOME="$HOME/Library/Java/JavaVirtualMachines/corretto-17.0.17/Contents/Home"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+
+# 4. Herramientas secundarias y específicas (Al final del PATH)
+_has_dir /usr/local/sbin && export PATH="$PATH:/usr/local/sbin"
+_has_dir ~/.console-ninja/.bin && export PATH="$PATH:~/.console-ninja/.bin"
+_has_dir ~/.amplify/bin && export PATH="$PATH:~/.amplify/bin"
+_has_dir ~/Project/sonar-bin/bin && export PATH="$PATH:~/Project/sonar-bin/bin"
+
+# Bases de datos / Legacy de Intel (vía usr/local)
+_has_dir /usr/local/opt/elasticsearch@2.4/bin && export PATH="$PATH:/usr/local/opt/elasticsearch@2.4/bin"
+_has_dir /usr/local/opt/openssl@1.1/bin && export PATH="$PATH:/usr/local/opt/openssl@1.1/bin"
+
+
+# 5. Configuraciones de Zsh, Autocomplete y Aliases
+# Cargar aliases personalizados
+[[ -f ~/.oh-my-zsh/custom/aliases ]] && source ~/.oh-my-zsh/custom/aliases
+
+# Completions y Zstyle
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
 zstyle ':completion:*' menu select
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
