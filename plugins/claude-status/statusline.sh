@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude Code statusline — plain Unicode separators, polished two-line layout
+# Claude Code statusline — single-line compact layout
 
 source "$(dirname "$0")/latency-common.sh"
 
@@ -16,16 +16,12 @@ five_resets_at=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empt
 week_pct=$(echo "$input"    | jq -r '.rate_limits.seven_day.used_percentage // empty')
 week_resets_at=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
-user=$(whoami)
-host=$(hostname -s)
+# Path: last component only
+short_cwd=$(basename "$cwd")
+[ -z "$short_cwd" ] && short_cwd="/"
 
-# Path: relative to project parent, or home-abbreviated
-if [ -n "$project_dir" ] && [ "$project_dir" != "null" ]; then
-  project_parent=$(dirname "$project_dir")
-  short_cwd="${cwd/#$project_parent\//}"
-else
-  short_cwd="${cwd/#$HOME/~}"
-fi
+# Model: last segment only (e.g. "claude-sonnet-4-6" → "sonnet-4-6")
+model=$(echo "$model" | sed 's/^claude-//')
 
 git_branch=""
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
@@ -36,27 +32,24 @@ fi
 # ── ANSI helpers ─────────────────────────────────────────────────────────────
 fg()  { printf "\033[38;5;%sm" "$1"; }
 bg()  { printf "\033[48;5;%sm" "$1"; }
-bold(){ printf "\033[1m"; }
 dim() { printf "\033[2m"; }
 rst() { printf "\033[0m"; }
 
-# Separators — Nerd Font lego separator thin
-SEP_FULL=   # U+E0CF nerd font lego separator thin
-SEP_THIN=   # U+E0CF nerd font lego separator thin
+# Separators — ASCII only (powerline glyphs cause iTerm2 width miscalculation)
+SEP_FULL="|"
+SEP_THIN=":"
 
 # Palette
-C_HOST_BG=24    # dark teal
-C_HOST_FG=195   # bright near-white
 C_PATH_BG=238   # dark grey
 C_PATH_FG=252   # light grey
 C_GIT_BG=22     # dark green
 C_GIT_FG=157    # bright mint
 C_MDL_BG=235    # near-black
 C_MDL_FG=244    # medium grey
-C_L2_FG=245     # muted grey
+C_INFO_FG=245   # muted grey
 
-# Usage gradient: green -> yellow -> orange -> red
-bar_color() {
+# Usage color: green -> yellow -> orange -> red
+usage_color() {
   local pct=$1
   if   [ "$pct" -lt 50 ]; then printf "82"
   elif [ "$pct" -lt 75 ]; then printf "226"
@@ -65,97 +58,59 @@ bar_color() {
   fi
 }
 
-make_bar() {
-  local pct=$1 width=8
-  local filled=$(( pct * width / 100 ))
-  local empty=$(( width - filled ))
-  local bar="" i
-  for (( i=0; i<filled; i++ )); do bar="${bar}█"; done
-  for (( i=0; i<empty;  i++ )); do bar="${bar}▒"; done
-  printf "%s" "$bar"
+inline_sep() {
+  printf "%b %s %b" "$(fg 239)" "$SEP_THIN" "$(fg $C_INFO_FG)"
 }
 
-# ── LINE 1 ───────────────────────────────────────────────────────────────────
-# Segment: user@host
-printf "%b%b%b %s@%s " "$(bold)" "$(bg $C_HOST_BG)" "$(fg $C_HOST_FG)" "$user" "$host"
-
-# Transition host -> path
-printf "%b%b%b %s %b" "$(rst)" "$(bg $C_PATH_BG)" "$(fg $C_HOST_BG)" "$SEP_FULL" "$(rst)"
-
-# Segment: cwd
-printf "%b%b  %s " "$(bg $C_PATH_BG)" "$(fg $C_PATH_FG)" "$short_cwd"
+# ── SEGMENTS (flat, ASCII separators — safe for iTerm2) ──────────────────────
+printf "%b %s " "$(fg $C_PATH_FG)" "$short_cwd"
 
 if [ -n "$git_branch" ]; then
-  printf "%b%b%b %s %b" "$(rst)" "$(bg $C_GIT_BG)" "$(fg $C_PATH_BG)" "$SEP_FULL" "$(rst)"
-  printf "%b%b  %s " "$(bg $C_GIT_BG)" "$(fg $C_GIT_FG)" "$git_branch"
-  _prev_bg=$C_GIT_BG
-else
-  _prev_bg=$C_PATH_BG
+  printf "%b%s%b %s " "$(fg 239)" "$SEP_FULL" "$(fg $C_GIT_FG)" "$git_branch"
 fi
 
 if [ -n "$model" ]; then
-  printf "%b%b%b %s %b" "$(rst)" "$(bg $C_MDL_BG)" "$(fg $_prev_bg)" "$SEP_FULL" "$(rst)"
-  printf "%b%b%b  %s " "$(dim)" "$(bg $C_MDL_BG)" "$(fg $C_MDL_FG)" "$model"
-  printf "%b%b %s %b" "$(rst)" "$(fg $C_MDL_BG)" "$SEP_FULL" "$(rst)"
-else
-  printf "%b%b %s %b" "$(rst)" "$(fg $_prev_bg)" "$SEP_FULL" "$(rst)"
+  printf "%b%s%b%b %s %b" "$(fg 239)" "$SEP_FULL" "$(dim)" "$(fg $C_MDL_FG)" "$model" "$(rst)"
 fi
 
-printf "\033[0m\n"
+# ── INLINE STATS (context, rate limits, latency, PR) ─────────────────────────
+has_stat=0
 
-# ── LINE 2 ───────────────────────────────────────────────────────────────────
-has_l2=0
-
-l2_sep() {
-  printf "%b %s %b" "$(fg 239)" "$SEP_THIN" "$(fg $C_L2_FG)"
-}
-
-# Context window
+# Context window — colored percentage dot
 if [ -n "$used_pct" ]; then
   used_int=$(printf "%.0f" "$used_pct")
-  bar=$(make_bar "$used_int")
-  bc=$(bar_color "$used_int")
-  printf " %b%b %b%b%s%b %b%s%%%b" \
-    "$(rst)$(dim)" "$(fg 67)" \
-    "$(rst)$(dim)" "$(fg $bc)" "$bar" "$(rst)$(dim)" \
-    "$(fg $C_L2_FG)" "$used_int" "$(rst)"
-  has_l2=1
+  uc=$(usage_color "$used_int")
+  [ "$has_stat" -eq 1 ] && inline_sep
+  printf "%b%b● %s%%%b" "$(dim)" "$(fg $uc)" "$used_int" "$(rst)"
+  has_stat=1
 fi
 
 # 5-hour rate limit
 if [ -n "$five_pct" ]; then
   five_int=$(printf "%.0f" "$five_pct")
-  bar=$(make_bar "$five_int")
-  bc=$(bar_color "$five_int")
+  uc=$(usage_color "$five_int")
   reset_label=""
   if [ -n "$five_resets_at" ]; then
     reset_time=$(date -r "$five_resets_at" +"%H:%M" 2>/dev/null)
-    [ -n "$reset_time" ] && reset_label=" $(rst)$(dim)$(fg 239)rst ${reset_time}$(rst)"
+    [ -n "$reset_time" ] && reset_label=" $(dim)$(fg 239)↺${reset_time}$(rst)"
   fi
-  [ "$has_l2" -eq 1 ] && l2_sep
-  printf "%b%b 5h %b%b%s%b %b%s%%%s%b" \
-    "$(rst)$(dim)" "$(fg 67)" \
-    "$(rst)$(dim)" "$(fg $bc)" "$bar" "$(rst)$(dim)" \
-    "$(fg $C_L2_FG)" "$five_int" "$reset_label" "$(rst)"
-  has_l2=1
+  [ "$has_stat" -eq 1 ] && inline_sep
+  printf "%b%b5h %s%%%s%b" "$(dim)" "$(fg $uc)" "$five_int" "$reset_label" "$(rst)"
+  has_stat=1
 fi
 
 # 7-day rate limit
 if [ -n "$week_pct" ]; then
   week_int=$(printf "%.0f" "$week_pct")
-  bar=$(make_bar "$week_int")
-  bc=$(bar_color "$week_int")
+  uc=$(usage_color "$week_int")
   week_reset_label=""
   if [ -n "$week_resets_at" ]; then
     week_reset_time=$(date -r "$week_resets_at" +"%a %H:%M" 2>/dev/null)
-    [ -n "$week_reset_time" ] && week_reset_label=" $(rst)$(dim)$(fg 239)rst ${week_reset_time}$(rst)"
+    [ -n "$week_reset_time" ] && week_reset_label=" $(dim)$(fg 239)↺${week_reset_time}$(rst)"
   fi
-  [ "$has_l2" -eq 1 ] && l2_sep
-  printf "%b%b 7d %b%b%s%b %b%s%%%s%b" \
-    "$(rst)$(dim)" "$(fg 67)" \
-    "$(rst)$(dim)" "$(fg $bc)" "$bar" "$(rst)$(dim)" \
-    "$(fg $C_L2_FG)" "$week_int" "$week_reset_label" "$(rst)"
-  has_l2=1
+  [ "$has_stat" -eq 1 ] && inline_sep
+  printf "%b%b7d %s%%%s%b" "$(dim)" "$(fg $uc)" "$week_int" "$week_reset_label" "$(rst)"
+  has_stat=1
 fi
 
 # Latency
@@ -167,15 +122,13 @@ if claude_latency_read; then
     unavailable) _lc=239 ;;
     *)           _lc=244 ;;
   esac
-  [ "$has_l2" -eq 1 ] && l2_sep
+  [ "$has_stat" -eq 1 ] && inline_sep
   if [ -n "$CLAUDE_LATENCY_MS" ] && [ "$CLAUDE_LATENCY_MS" != "null" ]; then
-    printf "%b%b%s %s%bms%b" \
-      "$(rst)$(dim)" "$(fg $_lc)" "$CLAUDE_LATENCY_ICON" "$CLAUDE_LATENCY_MS" \
-      "$(fg $C_L2_FG)" "$(rst)"
+    printf "%b%b%s %sms%b" "$(dim)" "$(fg $_lc)" "$CLAUDE_LATENCY_ICON" "$CLAUDE_LATENCY_MS" "$(rst)"
   else
-    printf "%b%b%s%b" "$(rst)$(dim)" "$(fg $_lc)" "$CLAUDE_LATENCY_ICON" "$(rst)"
+    printf "%b%b%s%b" "$(dim)" "$(fg $_lc)" "$CLAUDE_LATENCY_ICON" "$(rst)"
   fi
-  has_l2=1
+  has_stat=1
 fi
 
 # PR info
@@ -186,17 +139,12 @@ if [ -n "$pr_number" ]; then
     draft)             _pr_color=244 ; _pr_icon=" " ;;
     *)                 _pr_color=75  ; _pr_icon=" " ;;
   esac
-  [ "$has_l2" -eq 1 ] && l2_sep
-  printf "%b%b%sPR #%s%b" \
-    "$(rst)$(dim)" "$(fg $_pr_color)" "$_pr_icon" "$pr_number" "$(rst)"
+  [ "$has_stat" -eq 1 ] && inline_sep
+  printf "%b%b%sPR #%s%b" "$(dim)" "$(fg $_pr_color)" "$_pr_icon" "$pr_number" "$(rst)"
   if [ -n "$pr_state" ] && [ "$pr_state" != "null" ]; then
     printf "%b %s%b" "$(dim)$(fg 239)" "$pr_state" "$(rst)"
   fi
-  has_l2=1
+  has_stat=1
 fi
 
-if [ "$has_l2" -eq 1 ]; then
-  printf " %b\n" "$(rst)"
-else
-  printf "%b\n" "$(rst)"
-fi
+printf "\033[0m\n"
