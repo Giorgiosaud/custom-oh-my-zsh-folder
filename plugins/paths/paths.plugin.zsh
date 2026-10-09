@@ -28,10 +28,17 @@ if _has_dir "$BUN_INSTALL/bin"; then
   [[ -s "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
 fi
 
+# pnpm (globales)
+# Desde pnpm 11 los binarios globales viven en $PNPM_HOME/bin, no en $PNPM_HOME.
+export PNPM_HOME="$HOME/Library/pnpm"
+if _has_dir "$PNPM_HOME/bin" && [[ ":$PATH:" != *":$PNPM_HOME/bin:"* ]]; then
+  export PATH="$PNPM_HOME/bin:$PATH"
+fi
+
 # FNM (Fast Node Manager)
 # Si usas FNM, usualmente se inicializa directo. Si requiere FNM_PATH, asegúrate de definirla antes.
 if (( $+commands[fnm] )); then
-  eval "$(fnm env --use-on-cd --shell zsh)"
+  eval "$(fnm env --use-on-cd --shell zsh --log-level error)"
 fi
 
 # Pyenv & Ruby/RVM

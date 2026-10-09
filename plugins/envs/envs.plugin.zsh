@@ -9,3 +9,4 @@ ZSH_DISABLE_COMPFIX=true
 if [ -f ~/Gateway_CA_-_Cloudflare_Managed_G1.pem ]; then
   export NODE_EXTRA_CA_CERTS=~/Gateway_CA_-_Cloudflare_Managed_G1.pem
 fi
+export AMERIKIOSK_LOCAL_MCP_TOKEN=$(security find-generic-password -s 'amerikiosk-local-mcp' -a 'bearer-token' -w)
