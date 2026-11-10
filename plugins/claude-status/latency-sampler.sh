@@ -8,6 +8,23 @@ TIMEOUT=10
 
 mkdir -p "$HOME/.claude"
 
+# --- Keep the sampler's own log small (launchd appends stdout/stderr to it) ---
+SAMPLER_LOG="$HOME/.claude/latency-sampler.log"
+SAMPLER_LOG_MAX_BYTES=262144   # 256 KB; past that, keep the last 200 lines
+if [ -f "$SAMPLER_LOG" ] && [ "$(stat -f %z "$SAMPLER_LOG")" -gt "$SAMPLER_LOG_MAX_BYTES" ]; then
+  tail -n 200 "$SAMPLER_LOG" > "$SAMPLER_LOG.tmp" && mv "$SAMPLER_LOG.tmp" "$SAMPLER_LOG"
+fi
+
+# --- Count consecutive failed runs (latency-common.sh shows an error past a
+# threshold); a successful run, including "API unreachable", resets it ---
+FAILURES="$HOME/.claude/latency_failures"
+trap 'rc=$?
+if [ "$rc" -eq 0 ]; then
+  echo 0 > "$FAILURES"
+else
+  echo $(( $(cat "$FAILURES" 2>/dev/null || echo 0) + 1 )) > "$FAILURES"
+fi' EXIT
+
 # --- Measure HTTP latency via curl (401 response, no tokens consumed) ---
 ms="unavailable"
 curl_time=$(curl -s -o /dev/null -w "%{time_total}" \
@@ -24,12 +41,13 @@ fi
 
 # --- Handle unavailable ---
 if [ "$ms" = "unavailable" ]; then
-  echo '{"ms": null, "baseline": null, "ratio": null, "level": "unavailable"}' > "$CACHE"
+  echo '{"ms": null, "baseline": null, "ratio": null, "level": "unavailable"}' > "$CACHE.tmp" && mv "$CACHE.tmp" "$CACHE"
   exit 0
 fi
 
 # --- Append to log and prune entries older than 7 days ---
-[ -f "$LOG" ] || echo "[]" > "$LOG"
+# -s, not -f: an empty file (e.g. truncated by an interrupted write) also starts over.
+[ -s "$LOG" ] || echo "[]" > "$LOG"
 
 now=$(date +%s)
 hour=$(date +%-H)
@@ -37,16 +55,25 @@ weekday=$(date +%u)
 cutoff=$(( now - 30 * 86400 ))
 
 python3 - <<PYEOF
-import json, statistics
+import json, os, statistics
 
-with open("$LOG") as f:
-    log = json.load(f)
+# Writes go to a temp file and are renamed over the target, so a run cut
+# short never leaves a truncated file behind.
+def write_json(path, data):
+    with open(path + ".tmp", "w") as f:
+        json.dump(data, f)
+    os.replace(path + ".tmp", path)
+
+try:
+    with open("$LOG") as f:
+        log = json.load(f)
+except (OSError, ValueError):
+    log = []  # corrupt log: start over instead of failing every run
 
 log.append({"ts": $now, "ms": $ms, "hour": $hour, "weekday": $weekday})
 log = [e for e in log if e["ts"] >= $cutoff]
 
-with open("$LOG", "w") as f:
-    json.dump(log, f)
+write_json("$LOG", log)
 
 # Compute baseline: same weekday, hour ±1, excluding current entry
 samples = [
@@ -80,6 +107,5 @@ if len(samples) >= 30:
 else:
     result = {"ms": $ms, "baseline": None, "stdev": None, "level": "normal", "samples": len(samples)}
 
-with open("$CACHE", "w") as f:
-    json.dump(result, f)
+write_json("$CACHE", result)
 PYEOF

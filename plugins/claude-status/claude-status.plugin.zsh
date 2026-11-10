@@ -57,6 +57,7 @@ function prompt_claude_latency() {
     warn)        fg=178 ;;   # yellow (matches VCS_MODIFIED)
     peak)        fg=160 ;;   # red    (matches STATUS_ERROR)
     unavailable) fg=66  ;;   # grey   (matches TIME)
+    error)       fg=196 ;;   # bright red: the sampler is failing, check its log
   esac
 
   if [[ -n "$CLAUDE_LATENCY_MS" && "$CLAUDE_LATENCY_MS" != "null" ]]; then

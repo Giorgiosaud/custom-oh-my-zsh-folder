@@ -16,6 +16,7 @@ An oh-my-zsh plugin that shows Claude API latency in your terminal prompt and Cl
 | warning | Yellow | Elevated — 1–2 stdev above baseline |
 | heartbeat | Red | Peak — > 2 stdev above baseline |
 | shield | Grey | Unavailable — TCP timeout |
+| exclamation (`api !` in the statusline) | Bright red | Error — the sampler failed 5 runs in a row, or the cache is older than 5 minutes (sampler stopped). Check `~/.claude/latency-sampler.log` |
 
 The baseline is the median of samples taken at the same hour (+/-1) and weekday over the last 30 days. Requires 30+ samples before statistical thresholds activate.
 
@@ -87,7 +88,8 @@ All scripts live in the plugin directory — nothing is copied outside.
 |------|-------------|
 | `~/.claude/latency_log.json` | Rolling 30-day sample history |
 | `~/.claude/latency_cache.json` | Latest result read by prompt and statusline |
-| `~/.claude/latency-sampler.log` | Sampler stdout/stderr |
+| `~/.claude/latency-sampler.log` | Sampler stdout/stderr; trimmed to its last 200 lines once it passes 256 KB |
+| `~/.claude/latency_failures` | Consecutive failed sampler runs (reset by a good run) |
 | `~/Library/LaunchAgents/com.giorgiosaud.claude.latency.plist` | Rendered launchd plist |
 
 ---
